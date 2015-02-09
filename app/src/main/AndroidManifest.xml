@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.akaplo.bullshit" >
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".NameEntry"
+            android:label="@string/title_activity_name_entry" >
+        </activity>
+        <activity
+            android:name=".PlayerLanding"
+            android:label="@string/title_activity_player_landing" >
+        </activity>
+        <activity
+            android:name=".PlayerHand"
+            android:label="@string/title_activity_player_hand" >
+        </activity>
+    </application>
+
+</manifest>
