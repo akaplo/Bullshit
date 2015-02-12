@@ -1,9 +1,7 @@
 package com.akaplo.bullshit;
 
-import android.app.ActionBar;
+
 import android.content.Intent;
-import android.content.res.AssetManager;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +26,7 @@ public class NameEntry extends ActionBarActivity {
 
     //Declare EditTexts
 
-    List<EditText> editTextNames = new ArrayList<EditText>();
+    List<EditText> editTextNames = new ArrayList<>();
 
     //Declare String Arrays
 
@@ -43,10 +40,10 @@ public class NameEntry extends ActionBarActivity {
 
     //Declare programmatic layouts
 
-    private LinearLayout editTextHolder;
+    LinearLayout editTextHolder;
 
 
-    List<User> userList = new ArrayList<User>();
+    List<User> userList = new ArrayList<>();
 
     public static Game game;
 
@@ -63,7 +60,7 @@ public class NameEntry extends ActionBarActivity {
 
             //Get the number of players from the button on the previous page
 
-            this.numberOfPlayers = MainActivity.numberOfPlayers;
+            numberOfPlayers = MainActivity.numberOfPlayers;
 
             //Based on the number of players, instantiate the EditText array
 
@@ -133,7 +130,7 @@ public class NameEntry extends ActionBarActivity {
                     Log.d(TAG, "Deck created and shuffled");
 
                     for(User u : userList){
-                        if(u.getName() != "The Middle") {
+                        if(!(u.getName().equals("The Middle"))) {
                             u.initHand(deck, numberOfPlayers);
                             u.showCurrentCard();
                         }
@@ -143,7 +140,7 @@ public class NameEntry extends ActionBarActivity {
 
                     Log.d(TAG, "Number of users: " + (userList.size()-1));
 
-                    /*Drawable*/int[][] cardPictures = bindCardPictures();
+                    int[][] cardPictures = bindCardPictures();
 
                     Log.d(TAG, "Card pictures bound");
 
@@ -199,7 +196,7 @@ public class NameEntry extends ActionBarActivity {
         int QUEEN = 12;   //   numerical values for their codes.
         int KING = 13;
 
-        /*Drawable*/int[][] cardPictures = new /*Drawable*/int[14][4];
+        int[][] cardPictures = new int[14][4];
 
         //CLUBS:
 

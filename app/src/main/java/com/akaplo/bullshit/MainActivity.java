@@ -1,6 +1,6 @@
 package com.akaplo.bullshit;
 
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View.OnClickListener;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 
@@ -30,15 +29,6 @@ public class MainActivity extends ActionBarActivity {
     Button threeUsersBT;
     Button fourUsersBT;
     Button fiveUsersBT;
-
-
-    //Declare editTexts
-
-    EditText plOneEditText;
-    EditText plTwoEditText;
-    EditText plThreeEditText;
-    EditText plFourEditText;
-    EditText plFiveEditText;
 
 
 

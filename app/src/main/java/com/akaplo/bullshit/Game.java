@@ -1,13 +1,9 @@
 package com.akaplo.bullshit;
 
-import android.graphics.drawable.Drawable;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Aaron on 2/3/15.
- */
+
 public class Game {
 
    List<User> userList;
@@ -20,9 +16,9 @@ public class Game {
 
     Hand middle;
 
-    /*Drawable*/int[][] cardPictures;
+    int[][] cardPictures;
 
-    public Game(List<User> userList, Deck d, int num, /*Drawable*/int[][] cardpics){
+    public Game(List<User> userList, Deck d, int num, int[][] cardpics){
         this.userList = userList;
         this.deck = d;
         this. numberOfPlayers = num;
@@ -44,7 +40,7 @@ public class Game {
         return userList.get(currentUser).getName();
     }
 
-    public /*Drawable*/int[][] getCardPictures(){
+    public int[][] getCardPictures(){
         return cardPictures;
     }
 
