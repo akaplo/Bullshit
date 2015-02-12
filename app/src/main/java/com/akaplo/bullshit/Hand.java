@@ -129,4 +129,14 @@ public class Hand {
         hand = newHand;
     }
 
+    public Card[] toArray(){
+        Card[] cardArray = new Card[getCardCount()];
+
+        for(int i = 0; i < getCardCount(); i++){
+            cardArray[i] = getCard(i);
+        }
+
+        return cardArray;
+    }
+
 }

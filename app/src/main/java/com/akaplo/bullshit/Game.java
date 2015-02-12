@@ -18,10 +18,10 @@ public class Game {
 
     int[][] cardPictures;
 
-    public Game(List<User> userList, Deck d, int num, int[][] cardpics){
+    public Game(List<User> userList, Deck d, int numOfPlayers, int[][] cardpics){
         this.userList = userList;
         this.deck = d;
-        this. numberOfPlayers = num;
+        this. numberOfPlayers = numOfPlayers;
         currentUser = 0;
         middle = new Hand();
         cardPictures = cardpics;
@@ -32,12 +32,19 @@ public class Game {
 
     }
 
+    public int getNumberOfPlayers(){ return numberOfPlayers; }
+
     public int getUserInt(){
         return currentUser;
     }
 
     public String getUserName(){
         return userList.get(currentUser).getName();
+    }
+
+    public void setUser(int userNumber){
+        if(userNumber >= numberOfPlayers) currentUser = 0;
+        else this.currentUser = userNumber;
     }
 
     public int[][] getCardPictures(){
