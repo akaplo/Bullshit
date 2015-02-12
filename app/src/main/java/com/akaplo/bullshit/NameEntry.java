@@ -121,7 +121,7 @@ public class NameEntry extends ActionBarActivity {
                         userList.add(new User(s, nameStrings[s]));
 
                     }
-                    userList.add(new User(numberOfPlayers++, "The Middle"));
+                    userList.add(new User(numberOfPlayers+1, "The Middle"));
 
 
                     Log.d(TAG, "All users accounted for");
@@ -133,13 +133,15 @@ public class NameEntry extends ActionBarActivity {
                     Log.d(TAG, "Deck created and shuffled");
 
                     for(User u : userList){
-                        u.initHand(deck, numberOfPlayers);
-                        u.showCurrentCard();
+                        if(u.getName() != "The Middle") {
+                            u.initHand(deck, numberOfPlayers);
+                            u.showCurrentCard();
+                        }
                     }
 
                     //Log.d(TAG, "All user hands have been initialized");
 
-                    Log.d(TAG, "Number of users: " + userList.size());
+                    Log.d(TAG, "Number of users: " + (userList.size()-1));
 
                     /*Drawable*/int[][] cardPictures = bindCardPictures();
 

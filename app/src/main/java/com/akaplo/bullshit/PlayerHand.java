@@ -1,6 +1,9 @@
 package com.akaplo.bullshit;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -44,6 +47,10 @@ public class PlayerHand extends ActionBarActivity {
 
     LinearLayout myGallery;
 
+    User currentUser;
+
+    Hand hand;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +63,8 @@ public class PlayerHand extends ActionBarActivity {
 
             cardPictures = game.getCardPictures();
 
-            User currentUser = userList.get(game.getUserInt());
-            Hand hand = currentUser.getPlayerHand();
+            currentUser = userList.get(game.getUserInt());
+            hand = currentUser.getPlayerHand();
 
             Log.d(TAG, "Ready to display all cards in this user's hand");
 /*
@@ -100,16 +107,16 @@ public class PlayerHand extends ActionBarActivity {
                // myGallery.addView(insertPhoto(/*file.getAbsolutePath()*/"moo"));
        //     }
 
-            for(int i = 0; i < hand.getCardCount(); i++) {
-                int suit = hand.getCard(i).getSuit();
-                int val = hand.getCard(i).getValue();
-                myGallery.addView(insertPhoto(cardPictures[val][suit]));
+            for(int index = 0; index < hand.getCardCount(); index++) {
+                int suit = hand.getCard(index).getSuit();
+                int val = hand.getCard(index).getValue();
+                myGallery.addView(insertPhoto(cardPictures[val][suit], val, suit, index));
             }
 
         }
     }
 
-        View insertPhoto(int path){
+        View insertPhoto(int path, int val, int suit, int cardIndex){
            // Bitmap bm = decodeSampledBitmapFromUri(path, 220, 220);
 
             Bitmap bm = BitmapFactory.decodeResource(this.getResources(),
@@ -126,19 +133,78 @@ public class PlayerHand extends ActionBarActivity {
 
             layout.addView(imageView);
 
+            final int value = val;
+            final int suitNum = suit;
+            final int currCardIndex = cardIndex;
             imageView.setOnClickListener(new View.OnClickListener(){
-
                 @Override
                 public void onClick(View v) {
+                    Log.d(TAG, "On click listener set, ready for cards to be sent to the middle!");
+                    createDialog(value, suitNum, currCardIndex);
                     /*Toast.makeText(this,
                             "Clicked - " + itemList.get(i),
                             Toast.LENGTH_LONG).show();  */
-                    ToMiddleDialog middle = new ToMiddleDialog();
+                    //ToMiddleDialog middle = new ToMiddleDialog();
 
 
                 }});
             return layout;
         }
+
+
+    public void createDialog(int val, int suit, int cardIndex) {
+        // Use the Builder class for convenient dialog construction
+        /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.middle)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+
+                    }
+                });
+        // Create the AlertDialog object and return it
+         builder.create();
+
+    */
+
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        // set title
+        alertDialogBuilder.setTitle("Send this card to Middle?");
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(hand.getCard(cardIndex).toString())
+                .setCancelable(false)
+                .setPositiveButton("Yes!",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, send the card to the "middle" hand
+                        Log.d(TAG, "Someone wants to send a card to the middle!");
+                    }
+                })
+                .setNegativeButton("No",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+
+
 
     public Bitmap decodeSampledBitmapFromUri(String path, int reqWidth, int reqHeight) {
         Bitmap bm = null;
