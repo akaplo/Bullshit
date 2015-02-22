@@ -5,9 +5,13 @@ package com.akaplo.bullshit;
  * is created, and any number of cards can be added to it.
  */
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Hand {
+
+    final String TAG = "hand";
 
     private ArrayList<Card> hand;   // The cards in the hand.
 
@@ -37,14 +41,22 @@ public class Hand {
         hand.add(c);
     }
 
+    public Card removeLast(){
+        Log.d(TAG, "RemoveLast called, hand size is: " + hand.size());
+        return hand.remove(hand.size()-1);
+
+    }
+
     /**
      * Remove a card from the hand, if present.
      * @param c the card to be removed.  If c is null or if the card is not in 
      * the hand, then nothing is done.
      */
-    public void removeCard(Card c) {
+    public Card removeCard(Card c) {
         hand.remove(c);
+        return c;
     }
+
 
     /**
      * Remove the card in a specified position from the hand.
@@ -54,12 +66,15 @@ public class Hand {
      * the hand, that is if the position is less than 0 or greater than
      * or equal to the number of cards in the hand.
      */
-    public void removeCard(int position) {
+    public Card removeCard(int position) {
         if (position < 0 || position >= hand.size())
             throw new IllegalArgumentException("Position does not exist in hand: "
                     + position);
+        Card c = hand.get(position);
         hand.remove(position);
+        return c;
     }
+
 
     /**
      * Returns the number of cards in the hand.

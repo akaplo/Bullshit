@@ -10,5 +10,6 @@
     <string name="middle">Send to middle?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="title_activity_call_bullshit">CallBullshit</string>
 
 </resources>

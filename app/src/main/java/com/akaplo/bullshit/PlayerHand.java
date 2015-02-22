@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +16,7 @@ import android.graphics.BitmapFactory;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
-
+import android.widget.Toast;
 
 
 import java.util.List;
@@ -48,6 +47,8 @@ public class PlayerHand extends ActionBarActivity {
 
     Button done;
 
+    Card justRemovedCard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +67,8 @@ public class PlayerHand extends ActionBarActivity {
             middleHand = middle.getPlayerHand();
 
             hand = currentUser.getPlayerHand();
+
+            hand.sortByValue();
 
             cardArray = hand.toArray();
 
@@ -107,6 +110,7 @@ public class PlayerHand extends ActionBarActivity {
         View insertPhoto(int path, int cardIndex){
 
 
+
             Bitmap bm = BitmapFactory.decodeResource(this.getResources(), path);
 
             LinearLayout layout = new LinearLayout(getApplicationContext());
@@ -129,10 +133,12 @@ public class PlayerHand extends ActionBarActivity {
             final int currCardIndex = cardIndex;
 
 
+
+
             imageView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v) {
-                    Log.d(TAG, "On click listener set, ready for cards to be sent to the middle!");
+                    Log.d(TAG, "On click listener set, ready for cards to be sent to the middle! Curr card:" + currCardIndex);
                     createMiddleDialog(currCardIndex);
                    }});
             return layout;
@@ -154,7 +160,7 @@ public class PlayerHand extends ActionBarActivity {
                     public void onClick(DialogInterface dialog,int id) {
                         // if this button is clicked, move the the next player's landing page
                         game.setUser(currentUser.getPlayerNumber()+1);
-                        Intent nextPlayer = new Intent(PlayerHand.this, PlayerLanding.class);
+                        Intent nextPlayer = new Intent(PlayerHand.this, CallBullshit.class);
                         Log.d(TAG, "The user has just been updated to " + game.getUserInt() + " " + game.getUserName());
                         startActivity(nextPlayer);
                     }
@@ -174,7 +180,44 @@ public class PlayerHand extends ActionBarActivity {
         alertDialog.show();
     }
 
+    @Override
+    public void onBackPressed(){
+
+        if(middleHand.getCardCount() == 0)
+            createErrorToast();
+        else {
+            Card c = middleHand.removeLast();
+            hand.addCard(c);
+            refresh();
+        }
+
+    }
+
+    public void createErrorToast(){
+        Toast.makeText(getApplicationContext(), "No more moves to undo!",
+                Toast.LENGTH_LONG).show();
+    }
+
     public void createMiddleDialog(final int cardIndex) {
+        //aaron is a poop, he poops a lot therefore he is a poop
+        //ding dong aaron has a dong
+        //i like his dong
+        //it makes me happy
+        //as well does his rice crispy treats
+        //cutie patootie writing code, making a game with an inappropriate name
+        //that's my aaron
+        //being smart, going to college and learning a lot
+        //i like to rhyme
+        //doodle doodle do, i love you
+        //its the day after valentine's but i love you even more
+        //i like sleeping next to you
+        //and waking up and kissing you
+        //you're weird though, you're always hot and i'm always cold
+        //you are my space heater
+        //i need a more romantic way to say that but i don't care because it's very accurate moooo
+        //this is a great comment and i think it will make you happy when you're done pooping
+
+
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
@@ -190,11 +233,14 @@ public class PlayerHand extends ActionBarActivity {
                     public void onClick(DialogInterface dialog,int id) {
                         // if this button is clicked, send the card to the "middle" hand
                         Log.d(TAG, "Before removing, the hand has " + hand.getCardCount() + " cards");
-                        middleHand.addCard(cardArray[cardIndex]);
-                        hand.removeCard(cardArray[cardIndex]);
 
-                        Intent refresh = new Intent(PlayerHand.this, PlayerHand.class);
-                        startActivity(refresh);
+                        justRemovedCard = hand.removeCard(cardArray[cardIndex]);
+                        Log.d(TAG, "The card just removed is: " + justRemovedCard.toString());
+                        middleHand.addCard(justRemovedCard);
+
+
+                        refresh();
+
                        // drawHand();
 
                        // findViewById(android.R.id.content).getRootView().requestLayout();
@@ -222,7 +268,11 @@ public class PlayerHand extends ActionBarActivity {
         alertDialog.show();
     }
 
-
+    public void refresh(){
+        Intent refresh = new Intent(PlayerHand.this, PlayerHand.class);
+        //this.finishActivity(0);
+        startActivity(refresh);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

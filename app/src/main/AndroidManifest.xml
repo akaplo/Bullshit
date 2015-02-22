@@ -28,6 +28,10 @@
             android:name=".PlayerHand"
             android:label="@string/title_activity_player_hand" >
         </activity>
+        <activity
+            android:name=".CallBullshit"
+            android:label="@string/title_activity_call_bullshit" >
+        </activity>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +54,9 @@ public class NameEntry extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_name_entry);
+
+        //THE FOLLOWING IS TEST CODE
+
 
         //If the page isn't being restored:
 
@@ -228,6 +232,8 @@ public class NameEntry extends ActionBarActivity {
         cardPictures[10][DIAMONDS] = /*getResources().getDrawabl*e*/(R.drawable.tend);
         cardPictures[JACK] [DIAMONDS] = /*getResources().getDrawable*/(R.drawable.jd);
         cardPictures[QUEEN][DIAMONDS] = /*getResources().getDrawable*/(R.drawable.qd);
+        //SVG kd = SVGParser.getSVGFromResource(getResources(), R.raw.Playing_card_diamond_K);
+        //cardPictures[KING][DIAMONDS] = R.raw.Playing_card_diamond_K;
         cardPictures[KING][DIAMONDS] = /*getResources().getDrawable*/(R.drawable.kd);
 
         //HEARTS:
