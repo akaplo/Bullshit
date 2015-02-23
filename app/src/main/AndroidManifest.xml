@@ -32,6 +32,10 @@
             android:name=".CallBullshit"
             android:label="@string/title_activity_call_bullshit" >
         </activity>
+        <activity
+            android:name=".Rules"
+            android:label="@string/title_activity_rules" >
+        </activity>
     </application>
 
 </manifest>
