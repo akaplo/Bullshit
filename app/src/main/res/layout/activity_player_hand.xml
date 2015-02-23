@@ -7,55 +7,31 @@
     tools:context="com.akaplo.bullshit.PlayerHand"
     android:background="@color/primary">
 
-    <include layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+    />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".1"
-            android:id="@+id/linearLayout">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="The Middle Contains"
-                android:id="@+id/middle_card_count"
-                android:gravity="center" />
-
-            <Button
-                style="?android:attr/buttonStyleSmall"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Done"
-                android:id="@+id/done" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Card x / x"
-                android:id="@+id/number_of_cards"
-                android:gravity="center" />
-
-        </LinearLayout>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true">
 
 
         <HorizontalScrollView
             android:layout_width="fill_parent"
-            android:layout_weight=".5"
-            android:layout_gravity="bottom"
+            android:layout_weight=".8"
             android:layout_height="0dp"
-            android:background="#ff00b7cf">
+            android:background="#ff00b7cf"
+            android:layout_gravity="bottom">
 
-                >
+
             <LinearLayout
                 android:id="@+id/mygallery"
                 android:layout_width="wrap_content"
@@ -63,6 +39,39 @@
                 android:orientation="horizontal"
                 />
         </HorizontalScrollView>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".2"
+            android:id="@+id/linearLayout">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".33"
+                android:layout_height="fill_parent"
+                android:text="The Middle Contains"
+                android:id="@+id/middle_card_count"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight=".33"
+                android:layout_height="fill_parent"
+                android:text="Card x / x"
+                android:id="@+id/number_of_cards"
+                android:gravity="center" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="0dp"
+                android:layout_weight=".33"
+                android:layout_height="fill_parent"
+                android:text="Done"
+                android:id="@+id/done" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

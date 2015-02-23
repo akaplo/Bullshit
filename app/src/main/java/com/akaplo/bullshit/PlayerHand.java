@@ -78,38 +78,85 @@ public class PlayerHand extends ActionBarActivity {
 
             cardArray = hand.toArray();
 
-            done = (Button) findViewById(R.id.done);
 
-            Log.d(TAG, "Ready to display all cards in this user's hand");
-
-            Log.d(TAG, "Indeces ready, about to display hand");
-
-
+            Log.d(TAG, "Current user is: " + game.getUserName());
 
             myGallery = (LinearLayout) findViewById(R.id.mygallery);
 
+            if(!game.playerIsMiddle()) initPlayerView();
 
-            drawHand();
+            if(game.playerIsMiddle()) initMiddleView();
 
-            done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    createDoneDialog();
-                }
-            });
+
+
+
 
         }
     }
 
 
-        public void drawHand(){
+        protected void initPlayerView(){
+            done = (Button) findViewById(R.id.done);
 
-            for(int index = 0; index < hand.getCardCount(); index++) {
-                int suit = hand.getCard(index).getSuit();
-                int val = hand.getCard(index).getValue();
-                myGallery.addView(insertPhoto(cardPictures[val][suit], index));
+            Log.d(TAG, "Ready to display all cards in this user's hand");
+
+            Log.d(TAG, "Indeces ready, about to display hand");
+            done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createDialog("Done", "Are you done?", false);
+                }
+            });
+
+
+            drawHand(false);
+
+
+        }
+
+        protected void initMiddleView(){
+            done = (Button) findViewById(R.id.done);
+            done.setText("Were you bullshitting?");
+
+            Log.d(TAG, "Ready to display all cards in the middle's hand");
+
+
+
+            Log.d(TAG, "Indeces ready, about to display hand");
+            done.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    createDialog("Was it BS?", "Yes :(", true);
+                }
+            });
+
+
+            drawHand(true);
+
+
+        }
+
+        protected void drawHand(boolean middleView){
+
+            if(middleView) {
+
+               Card[] middleCards = game.getCardsSentThisTurn();
+                int ct = game.getNumberOfCardsSentThisTurn();
+
+                for (int index = 0; index < ct; index++) {
+                    int suit = middleCards[index].getSuit();
+                    int val = middleCards[index].getValue();
+                    myGallery.addView(insertPhoto(cardPictures[val][suit], index));
+                }
             }
+            else {
 
+                for (int index = 0; index < hand.getCardCount(); index++) {
+                    int suit = hand.getCard(index).getSuit();
+                    int val = hand.getCard(index).getValue();
+                    myGallery.addView(insertPhoto(cardPictures[val][suit], index));
+                }
+            }
         }
 
 
@@ -150,25 +197,36 @@ public class PlayerHand extends ActionBarActivity {
             return layout;
         }
 
-    public void createDoneDialog() {
+    public void createDialog(String title, String positiveMessage, final boolean isBS) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
 
         // set title
-        alertDialogBuilder.setTitle("Finish Turn");
+        alertDialogBuilder.setTitle(title);
 
         // set dialog message
         alertDialogBuilder
-                .setMessage("Are you done?")
+                .setMessage(positiveMessage)
                 .setCancelable(false)
-                .setPositiveButton("Yes!",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
-                        // if this button is clicked, move the the next player's landing page
-                        game.setUser(currentUser.getPlayerNumber()+1);
-                        Intent nextPlayer = new Intent(PlayerHand.this, CallBullshit.class);
-                        Log.d(TAG, "The user has just been updated to " + game.getUserInt() + " " + game.getUserName());
-                        startActivity(nextPlayer);
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                        if (isBS) {
+                            game.bullshitTrue();
+                            game.setUser(/*game.getUserBeforeBullshit()*/);
+                            game.nextTurn();
+
+                            nextTurn();
+
+                        } else {//game.setUserBeforeBullshit();
+                            // if this button is clicked, move the the landing to ask whether or not to call bullshit
+
+
+                            Intent moveToBSLanding = new Intent(PlayerHand.this, CallBullshit.class);
+                            Log.d(TAG, "The user has just been updated to " + game.getUserInt() + " " + game.getUserName());
+                            startActivity(moveToBSLanding);
+                        }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -176,6 +234,11 @@ public class PlayerHand extends ActionBarActivity {
                         // if this button is clicked, just close
                         // the dialog box and do nothing
                         dialog.cancel();
+                        createToast("Congratulations!");
+                        game.nextTurn();
+                        nextTurn();
+
+
                     }
                 });
 
@@ -189,18 +252,19 @@ public class PlayerHand extends ActionBarActivity {
     @Override
     public void onBackPressed(){
 
-        if(middleHand.getCardCount() == 0)
-            createErrorToast();
+        if(hand.getSentThisTurn() == 0)
+            createToast("No more moves to undo!");
         else {
             Card c = middleHand.removeLast();
             hand.addCard(c);
+            hand.downSentThisTurn();
             refresh();
         }
 
     }
 
-    public void createErrorToast(){
-        Toast.makeText(getApplicationContext(), "No more moves to undo!",
+    public void createToast(String msg){
+        Toast.makeText(getApplicationContext(), msg,
                 Toast.LENGTH_LONG).show();
     }
 
@@ -240,9 +304,8 @@ public class PlayerHand extends ActionBarActivity {
                         // if this button is clicked, send the card to the "middle" hand
                         Log.d(TAG, "Before removing, the hand has " + hand.getCardCount() + " cards");
 
-                        justRemovedCard = hand.removeCard(cardArray[cardIndex]);
-                        Log.d(TAG, "The card just removed is: " + justRemovedCard.toString());
-                        middleHand.addCard(justRemovedCard);
+                        moveToMiddle(cardIndex);
+
 
 
                         refresh();
@@ -264,6 +327,8 @@ public class PlayerHand extends ActionBarActivity {
                         // if this button is clicked, just close
                         // the dialog box and do nothing
                         dialog.cancel();
+
+
                     }
                 });
 
@@ -301,6 +366,19 @@ public class PlayerHand extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    public void moveToMiddle(int cardIndex){
+        justRemovedCard = hand.removeCard(cardArray[cardIndex]);
+        Log.d(TAG, "The card just removed is: " + justRemovedCard.toString());
+        middleHand.addCard(justRemovedCard);
+        hand.upSentThisTurn();
+        game.addCardSentThisTurn(justRemovedCard);
+    }
+
+    public void nextTurn(){
+        Intent nextTurn = new Intent(PlayerHand.this, PlayerLanding.class);
+        startActivity(nextTurn);
+    }
 
 
 }

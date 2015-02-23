@@ -13,6 +13,9 @@ public class Hand {
 
     final String TAG = "hand";
 
+    //Number of cards user has sent to the middle this turn
+    int sentThisTurn;
+
     private ArrayList<Card> hand;   // The cards in the hand.
 
     /**
@@ -152,6 +155,18 @@ public class Hand {
         }
 
         return cardArray;
+    }
+
+    public void upSentThisTurn(){
+    sentThisTurn++;
+    }
+
+    public void downSentThisTurn(){
+        sentThisTurn--;
+    }
+
+    public int getSentThisTurn(){
+        return sentThisTurn;
     }
 
 }

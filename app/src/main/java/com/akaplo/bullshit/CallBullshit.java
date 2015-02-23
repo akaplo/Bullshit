@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class CallBullshit extends ActionBarActivity {
 
-    //final String TAG = "CALLBS";
+    final String TAG = "CALLBS";
 
     TextView callBSEditText;
 
@@ -40,14 +40,19 @@ public class CallBullshit extends ActionBarActivity {
                 @Override
                 public void onClick(View v) {
 
+                    //Prepare to show the Middle's hand onscreen
+                    game.setUserMiddle();
+                    Intent toPlayerHand = new Intent(CallBullshit.this, PlayerHand.class);
+                    startActivity(toPlayerHand);
                 }
             });
 
-            //Wanna call da bs?
+
 
             dontCallBS.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    game.nextTurn();
                     Intent next = new Intent(CallBullshit.this, PlayerLanding.class);
                     startActivity(next);
                 }
