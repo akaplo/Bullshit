@@ -36,6 +36,10 @@
             android:name=".Rules"
             android:label="@string/title_activity_rules" >
         </activity>
+        <activity
+            android:name=".MiddleHand"
+            android:label="@string/title_activity_middle_hand" >
+        </activity>
     </application>
 
 </manifest>

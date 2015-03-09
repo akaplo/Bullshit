@@ -1,15 +1,19 @@
 package com.akaplo.bullshit;
 
 
+import android.util.Log;
+
 import java.util.List;
 
 
 public class Game {
 
-    private Card[] cardsSentThisTurn = new Card[26];
-    int cardsThisTurn = 0;
+    private static final String TAG = Game.class.getSimpleName();
 
-   List<User> userList;
+    private Card[] cardsSent= new Card[26];
+    int numOfCards = 0;
+
+    List<User> userList;
 
     Deck deck;
 
@@ -17,108 +21,167 @@ public class Game {
 
     int currentUser;
 
-    Hand middle;
+    User middleUser;
+
+    Hand middleHand;
 
     int[][] cardPictures;
+
+    int userWhoCalledBullshit;
 
     //Holds the user who was playing immediately before a bullshit was called.
     int lastUser;
 
-    /****************************************************
-    When the one and only Game object is instantiated in NameEntry,
-    numberOfPlayers passed to this class is the ACTUAL
-    NUMBER OF PLAYERS.  MIDDLE MUST BE ACCESSED THROUGH
-     (numberOfPlayers+1)
-    ****************************************************/
-    public Game(List<User> userList, Deck d, int numOfPlayers, int[][] cardpics){
+    /**
+     * *************************************************
+     * When the one and only Game object is instantiated in NameEntry,
+     * numberOfPlayers passed to this class is the ACTUAL
+     * NUMBER OF PLAYERS.  MIDDLE MUST BE ACCESSED THROUGH
+     * (numberOfPlayers+1)
+     * **************************************************
+     */
+    public Game(List<User> userList, Deck d, int numOfPlayers, int[][] cardpics) {
         this.userList = userList;
         this.deck = d;
-        this. numberOfPlayers = numOfPlayers;
+        this.numberOfPlayers = numOfPlayers;
         currentUser = 0;
-        middle = new Hand();
+        middleUser = new User(numOfPlayers+1, "The Middle");
+        middleHand = middleUser.getPlayerHand();
         cardPictures = cardpics;
     }
 
     //Only run this method once per game, as it will start everything fresh.
-    public void play(){
+    public void play() {
 
     }
 
-    public int getNumberOfPlayers(){ return numberOfPlayers; }
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
 
-    public Hand getUserHand(int userIndex){
+    public Hand getUserHand(int userIndex) {
         return userList.get(userIndex).getPlayerHand();
     }
 
-    public int getUserInt(){
+    public int getUserInt() {
         return currentUser;
     }
 
-    public String getUserName(){
+    public String getUserName() {
         return userList.get(currentUser).getName();
     }
 
-    public void setUser(){
-        if((currentUser+1) >= numberOfPlayers) currentUser = 0;
+    public void setUser() {
+        if ((currentUser + 1) >= numberOfPlayers) currentUser = 0;
         else this.currentUser++;
     }
 
-    public void setUserMiddle(){
-       currentUser = numberOfPlayers;
+    public Hand getMiddleHand(){
+        return middleHand;
     }
 
-    public boolean playerIsMiddle(){
-        if(currentUser == (numberOfPlayers)) return true;
-        else return false;
-    }
-
-    public int[][] getCardPictures(){
+    public int[][] getCardPictures() {
         return cardPictures;
     }
 
-    public void nextTurn(){
+    public void nextTurn() {
         setUser();
-        cardsThisTurn = 0;
-        for(int j = 0; j < cardsThisTurn; j++){
-            cardsSentThisTurn[j] = null;
+
+        for (int j = 0; j < numOfCards; j++) {
+            cardsSent[j] = null;
         }
+        numOfCards = 0;
     }
 
-    public List<User> getUserList(){
+    public List<User> getUserList() {
         return userList;
     }
 
-    public void bullshitTrue() {
-        for(int j = 0; j < cardsThisTurn; j++){
-            getHandBeforeBullshit().addCard(cardsSentThisTurn[j]);
-            middle.removeCard(cardsSentThisTurn[j]);
+    public User getCurrentUser(){
+        return userList.get(currentUser);
+    }
+
+    public void successfulBullshitCall() {
+        User badLier = userList.get(getUserBeforeBullshit());
+        Log.d(TAG, "The user whose deck the cards go back to: " + badLier.getName());
+        for (int j = 0; j < middleHand.getCardCount(); j++) {
+            badLier.getPlayerHand().addCard(middleHand.getCard(j));
+            middleHand.removeCard(j);
         }
     }
-    public void setUserBeforeBullshit(){
+
+    public void putOneCardBack() {
+            if(numOfCards > 0) {
+                getUserHand(currentUser).addCard(cardsSent[numOfCards - 1]);
+                middleHand.removeCard(cardsSent[numOfCards - 1]);
+                numOfCards--;
+            }
+        else throw new IllegalStateException("Attempted to put a card back, but there's none to put back");
+        }
+
+
+    public void saveUserBeforeBullshit() {
         lastUser = getUserInt();
     }
 
-    public Hand getHandBeforeBullshit(){
-        return userList.get(getUserBeforeBullshit()).getPlayerHand();
+    public int getUserBeforeBullshit() {
+        return lastUser;
     }
 
-    public int getUserBeforeBullshit(){
-        if(lastUser+1 != (numberOfPlayers+1))
-        return lastUser+1;
-        else return 0;
+    public Hand getHandBeforeBullshit() {
+        return userList.get(lastUser).getPlayerHand();
     }
 
-    public void addCardSentThisTurn(Card c){
-        cardsSentThisTurn[cardsThisTurn] = c;
-        cardsThisTurn++;
+
+    public void moveCardToMiddle(Card c){
+        middleHand.addCard(c);
+        userList.get(currentUser).getPlayerHand().removeCard(c);
+        numOfCards++;
     }
 
-    public Card[] getCardsSentThisTurn(){
-        return cardsSentThisTurn;
+
+
+
+    public Card[] getCardsSentThisTurn() {
+        Card[] cardsSent = new Card[middleHand.getCardCount()];
+        int middleLast = middleHand.getCardCount()-1;
+        for(int index = 0; index < numOfCards; index++){
+            cardsSent[index] = middleHand.getCard(middleLast);
+            middleLast--;
+        }
+
+        return cardsSent;
     }
 
-    public int getNumberOfCardsSentThisTurn(){
-        return cardsThisTurn;
+    public int getNumberOfCardsSentThisTurn() {
+        return numOfCards;
+    }
+
+
+    public User getMiddleUser() {
+        return middleUser;
+    }
+
+
+
+    public void setUserWhoCalledBullshit(){
+        int whoCalledBullshit;
+        if ((currentUser + 1) >= numberOfPlayers) whoCalledBullshit= 0;
+        else whoCalledBullshit = currentUser+1;
+
+        userWhoCalledBullshit = whoCalledBullshit;
+    }
+
+    public User getUserWhoCalledBullshit(){
+        return userList.get(userWhoCalledBullshit);
+    }
+
+    public void failedBullshitCall(){
+        User badGuesser = getUserWhoCalledBullshit();
+        for (int j = 0; j < middleHand.getCardCount(); j++) {
+            badGuesser.getPlayerHand().addCard(middleHand.getCard(j));
+            middleHand.removeCard(j);
+        }
     }
 
 }

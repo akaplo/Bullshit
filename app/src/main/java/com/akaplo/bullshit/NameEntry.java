@@ -122,7 +122,7 @@ public class NameEntry extends ActionBarActivity {
                         userList.add(new User(s, nameStrings[s]));
 
                     }
-                    userList.add(new User(numberOfPlayers+1, "The Middle"));
+
 
 
                     Log.d(TAG, "All users accounted for");
@@ -134,10 +134,8 @@ public class NameEntry extends ActionBarActivity {
                     Log.d(TAG, "Deck created and shuffled");
 
                     for(User u : userList){
-                        if(!(u.getName().equals("The Middle"))) {
                             u.initHand(deck, numberOfPlayers);
                             u.showCurrentCard();
-                        }
                     }
 
                     //Log.d(TAG, "All user hands have been initialized");

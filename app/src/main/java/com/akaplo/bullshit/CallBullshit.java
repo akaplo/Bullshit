@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 public class CallBullshit extends ActionBarActivity {
 
+    //TODO:Implement the CallBullshit.xml ability for bullshit to be called by a specific user
+
     final String TAG = "CALLBS";
 
     TextView callBSEditText;
@@ -41,9 +43,9 @@ public class CallBullshit extends ActionBarActivity {
                 public void onClick(View v) {
 
                     //Prepare to show the Middle's hand onscreen
-                    game.setUserMiddle();
-                    Intent toPlayerHand = new Intent(CallBullshit.this, PlayerHand.class);
-                    startActivity(toPlayerHand);
+                    game.setUserWhoCalledBullshit();
+                    Intent toMiddleHand= new Intent(CallBullshit.this, MiddleHand.class);
+                    startActivity(toMiddleHand);
                 }
             });
 

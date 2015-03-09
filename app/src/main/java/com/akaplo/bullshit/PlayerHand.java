@@ -26,9 +26,8 @@ import java.util.List;
 public class PlayerHand extends ActionBarActivity {
 
 
-    private static final String TAG = NameEntry.class.getSimpleName();
+    private static final String TAG = PlayerHand.class.getSimpleName();
 
-    List<User> userList = NameEntry.game.getUserList();
 
     Game game = NameEntry.game;
 
@@ -65,12 +64,11 @@ public class PlayerHand extends ActionBarActivity {
 
             cardPictures = game.getCardPictures();
 
-            currentUser = userList.get(game.getUserInt());
 
-            //a convoluted way of accessing the last element in the list (User: "middle")
-            middle = userList.get(game.getNumberOfPlayers());
+            currentUser = game.getCurrentUser();
 
-            middleHand = middle.getPlayerHand();
+            middle = game.getMiddleUser();
+
 
             hand = currentUser.getPlayerHand();
 
@@ -83,13 +81,7 @@ public class PlayerHand extends ActionBarActivity {
 
             myGallery = (LinearLayout) findViewById(R.id.mygallery);
 
-            if(!game.playerIsMiddle()) initPlayerView();
-
-            if(game.playerIsMiddle()) initMiddleView();
-
-
-
-
+            initPlayerView();
 
         }
     }
@@ -104,60 +96,27 @@ public class PlayerHand extends ActionBarActivity {
             done.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    createDialog("Done", "Are you done?", false);
+                    createDialog("Done", "Are you done?");
                 }
             });
 
 
-            drawHand(false);
+            drawHand();
 
 
         }
 
-        protected void initMiddleView(){
-            done = (Button) findViewById(R.id.done);
-            done.setText("Were you bullshitting?");
-
-            Log.d(TAG, "Ready to display all cards in the middle's hand");
 
 
+        protected void drawHand(){
 
-            Log.d(TAG, "Indeces ready, about to display hand");
-            done.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    createDialog("Was it BS?", "Yes :(", true);
-                }
-            });
-
-
-            drawHand(true);
-
-
-        }
-
-        protected void drawHand(boolean middleView){
-
-            if(middleView) {
-
-               Card[] middleCards = game.getCardsSentThisTurn();
-                int ct = game.getNumberOfCardsSentThisTurn();
-
-                for (int index = 0; index < ct; index++) {
-                    int suit = middleCards[index].getSuit();
-                    int val = middleCards[index].getValue();
-                    myGallery.addView(insertPhoto(cardPictures[val][suit], index));
+            for (int index = 0; index < hand.getCardCount(); index++) {
+                int suit = hand.getCard(index).getSuit();
+                int val = hand.getCard(index).getValue();
+                myGallery.addView(insertPhoto(cardPictures[val][suit], index));
                 }
             }
-            else {
 
-                for (int index = 0; index < hand.getCardCount(); index++) {
-                    int suit = hand.getCard(index).getSuit();
-                    int val = hand.getCard(index).getValue();
-                    myGallery.addView(insertPhoto(cardPictures[val][suit], index));
-                }
-            }
-        }
 
 
         View insertPhoto(int path, int cardIndex){
@@ -197,7 +156,7 @@ public class PlayerHand extends ActionBarActivity {
             return layout;
         }
 
-    public void createDialog(String title, String positiveMessage, final boolean isBS) {
+    public void createDialog(String title, String positiveMessage) {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
@@ -212,32 +171,19 @@ public class PlayerHand extends ActionBarActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        if (isBS) {
-                            game.bullshitTrue();
-                            game.setUser(/*game.getUserBeforeBullshit()*/);
-                            game.nextTurn();
-
-                            nextTurn();
-
-                        } else {//game.setUserBeforeBullshit();
+                            game.saveUserBeforeBullshit();
                             // if this button is clicked, move the the landing to ask whether or not to call bullshit
-
-
                             Intent moveToBSLanding = new Intent(PlayerHand.this, CallBullshit.class);
                             Log.d(TAG, "The user has just been updated to " + game.getUserInt() + " " + game.getUserName());
                             startActivity(moveToBSLanding);
                         }
-                    }
+
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, just close
                         // the dialog box and do nothing
                         dialog.cancel();
-                        createToast("Congratulations!");
-                        game.nextTurn();
-                        nextTurn();
-
 
                     }
                 });
@@ -252,12 +198,10 @@ public class PlayerHand extends ActionBarActivity {
     @Override
     public void onBackPressed(){
 
-        if(hand.getSentThisTurn() == 0)
+        if(game.getNumberOfCardsSentThisTurn() == 0)
             createToast("No more moves to undo!");
         else {
-            Card c = middleHand.removeLast();
-            hand.addCard(c);
-            hand.downSentThisTurn();
+            game.putOneCardBack();
             refresh();
         }
 
@@ -304,7 +248,8 @@ public class PlayerHand extends ActionBarActivity {
                         // if this button is clicked, send the card to the "middle" hand
                         Log.d(TAG, "Before removing, the hand has " + hand.getCardCount() + " cards");
 
-                        moveToMiddle(cardIndex);
+
+                        game.moveCardToMiddle(hand.getCard(cardIndex));
 
 
 
@@ -315,11 +260,11 @@ public class PlayerHand extends ActionBarActivity {
                        // findViewById(android.R.id.content).getRootView().requestLayout();
 
 
-                        Log.d(TAG, "After removing, the hand has " + hand.getCardCount() + " cards");
 
 
 
-                        Log.d(TAG, "The middle's hand consists of: " + middleHand.getCardCount() + " cards");
+
+
                     }
                 })
                 .setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -364,15 +309,6 @@ public class PlayerHand extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    public void moveToMiddle(int cardIndex){
-        justRemovedCard = hand.removeCard(cardArray[cardIndex]);
-        Log.d(TAG, "The card just removed is: " + justRemovedCard.toString());
-        middleHand.addCard(justRemovedCard);
-        hand.upSentThisTurn();
-        game.addCardSentThisTurn(justRemovedCard);
     }
 
     public void nextTurn(){

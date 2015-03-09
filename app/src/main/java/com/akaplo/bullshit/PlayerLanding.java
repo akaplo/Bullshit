@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 public class PlayerLanding extends ActionBarActivity {
 
-    private static final String TAG = NameEntry.class.getSimpleName();
+    private static final String TAG = PlayerLanding.class.getSimpleName();
 
     TextView landingName;
     TextView landingTurn;

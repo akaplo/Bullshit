@@ -12,5 +12,6 @@
     <string name="no">No</string>
     <string name="title_activity_call_bullshit">CallBullshit</string>
     <string name="title_activity_rules">Rules</string>
+    <string name="title_activity_middle_hand">MiddleHand</string>
 
 </resources>
