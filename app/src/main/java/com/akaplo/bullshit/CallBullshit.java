@@ -43,7 +43,7 @@ public class CallBullshit extends ActionBarActivity {
                 public void onClick(View v) {
 
                     //Prepare to show the Middle's hand onscreen
-                    game.setUserWhoCalledBullshit();
+                       game.setUserWhoCalledBullshit();
                     Intent toMiddleHand= new Intent(CallBullshit.this, MiddleHand.class);
                     startActivity(toMiddleHand);
                 }

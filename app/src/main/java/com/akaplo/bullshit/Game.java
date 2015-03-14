@@ -29,6 +29,8 @@ public class Game {
 
     int userWhoCalledBullshit;
 
+    private Card cardJustRemoved;
+
     //Holds the user who was playing immediately before a bullshit was called.
     int lastUser;
 
@@ -112,8 +114,14 @@ public class Game {
 
     public void putOneCardBack() {
             if(numOfCards > 0) {
-                getUserHand(currentUser).addCard(cardsSent[numOfCards - 1]);
-                middleHand.removeCard(cardsSent[numOfCards - 1]);
+
+                userList.get(currentUser).getPlayerHand().addCard(cardJustRemoved);
+                middleHand.removeCard(cardJustRemoved);
+
+            //Previous logic for removing the last card sent to the middle during a turn
+                //getUserHand(currentUser).addCard(cardsSent[numOfCards - 1]);
+                //middleHand.removeCard(cardsSent[numOfCards - 1]);
+
                 numOfCards--;
             }
         else throw new IllegalStateException("Attempted to put a card back, but there's none to put back");
@@ -136,7 +144,9 @@ public class Game {
     public void moveCardToMiddle(Card c){
         middleHand.addCard(c);
         userList.get(currentUser).getPlayerHand().removeCard(c);
+        cardJustRemoved = c;
         numOfCards++;
+        Log.d(TAG, numOfCards + " cards have been sent this turn");
     }
 
 
