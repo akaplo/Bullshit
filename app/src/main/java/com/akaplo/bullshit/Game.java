@@ -182,6 +182,10 @@ public class Game {
         userWhoCalledBullshit = whoCalledBullshit;
     }
 
+    public void setUserWhoCalledBullshit(int userNum){
+        userWhoCalledBullshit = userNum;
+    }
+
     public User getUserWhoCalledBullshit(){
         return userList.get(userWhoCalledBullshit);
     }

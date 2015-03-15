@@ -3,11 +3,16 @@ package com.akaplo.bullshit;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.List;
 
 
 public class CallBullshit extends ActionBarActivity {
@@ -21,7 +26,11 @@ public class CallBullshit extends ActionBarActivity {
     Button callBS;
     Button dontCallBS;
 
+    Button playerCallBS;
+
     Game game = NameEntry.game;
+
+    List<User> userList = game.getUserList();
 
 
     @Override
@@ -31,25 +40,15 @@ public class CallBullshit extends ActionBarActivity {
 
         callBSEditText = (TextView) findViewById(R.id.callBSTV);
 
-        callBS = (Button) findViewById(R.id.callBS);
+        makeButtons(game.getNumberOfPlayers());
+
+
+
         dontCallBS = (Button) findViewById(R.id.dontCallBS);
 
         if(savedInstanceState == null){
 
             callBSEditText.setText(game.getUserName() + " has finished turn.  Call bullshit?");
-
-            callBS.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    //Prepare to show the Middle's hand onscreen
-                       game.setUserWhoCalledBullshit();
-                    Intent toMiddleHand= new Intent(CallBullshit.this, MiddleHand.class);
-                    startActivity(toMiddleHand);
-                }
-            });
-
-
 
             dontCallBS.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -63,6 +62,39 @@ public class CallBullshit extends ActionBarActivity {
         }
     }
 
+    public void makeButtons(int players){
+        RelativeLayout relLayout = (RelativeLayout) findViewById(R.id.callBS_Relative);
+
+        LinearLayout linLayout = (LinearLayout) findViewById(R.id.call_button_layout);
+
+        for(int player = 0; player < players; player++) {
+            if (player != game.getUserBeforeBullshit()) {
+                final int userNum = player;
+                String buttonText = userList.get(player).getName() + ": Call bullshit";
+
+                playerCallBS = new Button(this);
+                playerCallBS.setText(buttonText);
+
+                linLayout.addView(playerCallBS);
+
+                //row.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+                playerCallBS.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Log.d(TAG, "card sent to player " + userNum + "'s hand");
+
+                        //Prepare to show the Middle's hand onscreen
+                        game.setUserWhoCalledBullshit(userNum);
+                        Intent toMiddleHand = new Intent(CallBullshit.this, MiddleHand.class);
+                        startActivity(toMiddleHand);
+                    } // end onClick
+                });
+            } // end "if"
+        } //end for
+
+    } //end method
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
