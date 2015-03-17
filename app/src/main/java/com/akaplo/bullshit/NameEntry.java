@@ -4,6 +4,7 @@ package com.akaplo.bullshit;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,6 +62,10 @@ public class NameEntry extends ActionBarActivity {
         //If the page isn't being restored:
 
         if(savedInstanceState == null) {
+            final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("Enter Your Names!");
 
             //Get the number of players from the button on the previous page
 

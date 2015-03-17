@@ -55,9 +55,7 @@ public class PlayerHand extends ActionBarActivity {
         setContentView(R.layout.activity_player_hand);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         setSupportActionBar(toolbar);
-
 
         if (savedInstanceState == null) {
 
@@ -66,6 +64,9 @@ public class PlayerHand extends ActionBarActivity {
 
 
             currentUser = game.getCurrentUser();
+
+            //Puts the name of the current user at the top of the screen:
+            getSupportActionBar().setTitle(currentUser.getName() + "'s Hand");
 
             middle = game.getMiddleUser();
 
@@ -307,7 +308,6 @@ public class PlayerHand extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

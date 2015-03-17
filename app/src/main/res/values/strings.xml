@@ -13,5 +13,11 @@
     <string name="title_activity_call_bullshit">CallBullshit</string>
     <string name="title_activity_rules">Rules</string>
     <string name="title_activity_middle_hand">MiddleHand</string>
+    <string name="title_activity_help">Help</string>
+
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
 
 </resources>

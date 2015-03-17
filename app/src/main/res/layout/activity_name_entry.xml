@@ -2,24 +2,81 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp"
+    android:background="@color/primary">
+
+    <include layout="@layout/toolbar"/>
+
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="5dp">
+
+
         <LinearLayout
             android:id="@+id/editTextHolder"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
         </LinearLayout>
+
     </ScrollView>
 
+         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+                <android.support.v7.widget.CardView
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+
+                    card_view:cardBackgroundColor="@color/primary"
+                    card_view:cardCornerRadius="2dp"
+                    android:layout_margin="6dp"
+                    card_view:cardElevation="6dp">
+
+
+
+                        <Button android:id="@+id/btn_start_game"
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/cardview_light_background"
+                            android:textColor="@color/material_blue_grey_800"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="Start Game!"
+                            android:padding="5dp" />
+
+                </android.support.v7.widget.CardView>
+
+         </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+      <!-->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -28,7 +85,11 @@
             android:id="@+id/btn_start_game"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Start Game!" />
-    </LinearLayout>
+            android:text="Start Game!"
 
-</LinearLayout>
+            />
+    </LinearLayout>
+-->
+
+
+

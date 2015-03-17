@@ -4,7 +4,6 @@ package com.akaplo.bullshit;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -66,9 +65,6 @@ public class Game {
         return numberOfPlayers;
     }
 
-    public Hand getUserHand(int userIndex) {
-        return userList.get(userIndex).getPlayerHand();
-    }
 
     public int getUserInt() {
         return currentUser;
