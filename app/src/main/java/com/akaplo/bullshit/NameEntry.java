@@ -129,18 +129,27 @@ public class NameEntry extends ActionBarActivity {
 
                     deck = new Deck(false);
 
-                    deck.shuffle();
+                    Log.d(TAG, "The deck, before doing anything, has: " + deck.cardsLeft() + " cards.");
 
-                    Log.d(TAG, "Deck created and shuffled");
+                    Log.d(TAG, "Deck created");
+
+                    /*
+
+                    The following code for dealing out cards has been deprecated
 
                     for(User u : userList){
                             u.initHand(deck, numberOfPlayers);
-                            u.showCurrentCard();
+                            u.printAllCards();
                     }
+
+                    */
+
+
+
 
                     //Log.d(TAG, "All user hands have been initialized");
 
-                    Log.d(TAG, "Number of users: " + (userList.size()-1));
+                    Log.d(TAG, "Number of users: " + (userList.size()));
 
                     int[][] cardPictures = bindCardPictures();
 
@@ -149,6 +158,8 @@ public class NameEntry extends ActionBarActivity {
                     game = new Game(userList, deck, numberOfPlayers, cardPictures);
 
 
+                    //The following code for dealing out cards is current:
+                    game.dealAllCards();
 
                     game.play();
 

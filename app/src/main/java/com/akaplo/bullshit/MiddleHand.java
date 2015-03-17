@@ -38,6 +38,8 @@ public class MiddleHand extends ActionBarActivity {
 
     int[][] cardPictures;
 
+    List<Card> cardsSentLastTurnList;
+
     LinearLayout myGallery;
 
     User currentUser;
@@ -66,10 +68,14 @@ public class MiddleHand extends ActionBarActivity {
 
             hand = currentUser.getPlayerHand();
 
-            hand.sortByValue();
+          //  hand.sortByValue();
 
-            cardArray = hand.toArray();
+            //cardArray = hand.toArray();
 
+
+            cardsSentLastTurnList = game.getcardsSentLastTurnList();
+
+            cardArray = game.getcardsSentLastTurnArray();
 
             Log.d(TAG, "Current user is: " + game.getUserName());
 
@@ -112,10 +118,10 @@ public void drawHand() {
     Log.d(TAG, "Game thinks "+ middleCards + " cards were sent this turn");
 
 
-        for (int index = 0; index < hand.getCardCount(); index++) {
+        for (int index = 0; index < cardsSentLastTurnList.size(); index++) {
             if(middleCards > 0) {
-                int suit = hand.getCard(index).getSuit();
-                int val = hand.getCard(index).getValue();
+                int suit = cardsSentLastTurnList.get(index).getSuit();
+                int val = cardsSentLastTurnList.get(index).getValue();
                 myGallery.addView(insertPhoto(cardPictures[val][suit], index));
             }
                 middleCards--;
@@ -170,7 +176,7 @@ public void drawHand() {
                     }
 
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Nope", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // If the player was telling the truth,
                         // put the cards into the hand of the player who called bullshit

@@ -3,14 +3,19 @@ package com.akaplo.bullshit;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 
 public class Game {
 
     private static final String TAG = Game.class.getSimpleName();
 
-    private Card[] cardsSent= new Card[26];
+    private List<Card> cardsSentList = new ArrayList<>();
+    private Card[] cardsSentArray = new Card[26];
+
     int numOfCards = 0;
 
     List<User> userList;
@@ -89,9 +94,15 @@ public class Game {
     public void nextTurn() {
         setUser();
 
+
+        cardsSentList.clear();
+
+        /* Deprecated code: this was used then cardsSend was an array
         for (int j = 0; j < numOfCards; j++) {
-            cardsSent[j] = null;
+            cardsSentArray[j] = null;
         }
+        */
+
         numOfCards = 0;
     }
 
@@ -101,15 +112,6 @@ public class Game {
 
     public User getCurrentUser(){
         return userList.get(currentUser);
-    }
-
-    public void successfulBullshitCall() {
-        User badLier = userList.get(getUserBeforeBullshit());
-        Log.d(TAG, "The user whose deck the cards go back to: " + badLier.getName());
-        for (int j = 0; j < middleHand.getCardCount(); j++) {
-            badLier.getPlayerHand().addCard(middleHand.getCard(j));
-            middleHand.removeCard(j);
-        }
     }
 
     public void putOneCardBack() {
@@ -145,12 +147,19 @@ public class Game {
         middleHand.addCard(c);
         userList.get(currentUser).getPlayerHand().removeCard(c);
         cardJustRemoved = c;
+        cardsSentList.add(c);
+        //cardsSentArray[numOfCards] = c;
         numOfCards++;
         Log.d(TAG, numOfCards + " cards have been sent this turn");
     }
 
+    public List<Card> getcardsSentLastTurnList(){
+        return cardsSentList;
+    }
 
-
+    public Card[] getcardsSentLastTurnArray(){
+        return cardsSentArray;
+    }
 
     public Card[] getCardsSentThisTurn() {
         Card[] cardsSent = new Card[middleHand.getCardCount()];
@@ -173,6 +182,20 @@ public class Game {
     }
 
 
+    public void printAllHands(){
+        for(int player = 0; player < getNumberOfPlayers(); player++) {
+            Card[] playersCards = userList.get(player).getPlayerHand().toArray();
+            Log.d(TAG, userList.get(player).getName() + "'s hand: ");
+            for(int j = 0; j <  userList.get(player).getPlayerHand().getCardCount(); j++) {
+                Log.d(TAG, playersCards[j] + ", ");
+            }
+        }
+        Card[] middlesCards = getMiddleHand().toArray();
+        Log.d(TAG, "Middle's hand: ");
+        for(int j = 0; j < getMiddleHand().getCardCount(); j++){
+            Log.d(TAG, middlesCards[j] + ", ");
+        }
+    }
 
     public void setUserWhoCalledBullshit(){
         int whoCalledBullshit;
@@ -190,12 +213,142 @@ public class Game {
         return userList.get(userWhoCalledBullshit);
     }
 
+    /*
+    Puts all the middle's cards into the hand of the player who called Bullshit and was wrong.
+
+    So, say C puts in 1 Ace and A calls Bullshit.  If C wasn't lying, this method gets called
+        and the entire middleHand goes into A's hand.
+    */
     public void failedBullshitCall(){
-        User badGuesser = getUserWhoCalledBullshit();
-        for (int j = 0; j < middleHand.getCardCount(); j++) {
-            badGuesser.getPlayerHand().addCard(middleHand.getCard(j));
+        Hand badGuesserHand = getUserWhoCalledBullshit().getPlayerHand();
+
+        List<Card> middleList = middleHand.toList();
+
+        for(ListIterator<Card> iter = middleList.listIterator(); iter.hasNext(); ){
+            Card element = iter.next();
+
+            badGuesserHand.addCard(element);
+        }
+
+        middleHand.clear();
+
+        Log.d(TAG, "Middle now has " + middleHand.getCardCount() + " cards.");
+
+        Log.d(TAG, "C now has " + badGuesserHand.getCardCount() + " cards");
+
+        /*  DEPRECATED
+
+        middleHand = getMiddleHand();
+
+        ArrayList<Card> middleCards = getMiddleHand().getHand();
+
+      //  Log.d(TAG, "The middle has " + middleHand.getCardCount() + "total cards before removing them.");
+      //  Log.d(TAG, "These cards are: ");
+
+        for(Card c : middleCards){
+            badGuesserHand.addCard(c);
+            middleHand.removeCard(c);
+        }
+
+        if(middleHand.getCardCount() != 0) throw new IllegalStateException("'failedBullshitCall': loop to empty middle's hand doesn't work");
+
+        */
+
+        /* Deprecated code to remove all cards from middle and put into user's hand who called bullshit
+        for (int j = 0; j <= middleHand.getCardCount(); j++) {
+            Log.d(TAG, middleHand.getCard(j).toString());
+            badGuesserHand.getPlayerHand().addCard(middleHand.getCard(j));
             middleHand.removeCard(j);
         }
+
+        */
+
+    }
+
+    public void successfulBullshitCall() {
+        Hand badLierHand = userList.get(getUserBeforeBullshit()).getPlayerHand();
+
+        Log.d(TAG, "Before anything, c has " + badLierHand.getCardCount() + " cards");
+
+        List<Card> middleList = middleHand.toList();
+        //Log.d(TAG, "The user whose deck the cards go back to: " + badLier.());
+
+        for (ListIterator<Card> iter = middleList.listIterator(); iter.hasNext(); ) {
+            Card element = iter.next();
+
+            badLierHand.addCard(element);
+            // 1 - can call methods of element
+            // 2 - can use iter.remove() to remove the current element from the list
+            // 3 - can use iter.add(...) to insert a new element into the list
+            //     between element and iter->next()
+            // 4 - can use iter.set(...) to replace the current element
+
+            // ...
+        }
+
+        middleHand.clear();
+
+        Log.d(TAG, "Middle now has " + middleHand.getCardCount() + " cards.");
+
+        Log.d(TAG, "C now has " + badLierHand.getCardCount() + " cards");
+
+        /*
+
+        middleHand = getMiddleHand();
+
+
+        ArrayList<Card> middleCards = getMiddleHand().getHand();
+
+        Iterator e = middleCards.iterator();
+        int index = 0;
+        Log.d(TAG, middleCards.size() + "");
+
+
+
+        while(e.hasNext()){
+            badLierHand.addCard(middleHand.getCard(index));
+            index++;
+            e.next();
+        }
+        badLierHand.addCard(middleHand.getCard(0));
+        middleHand.clear();
+
+        if(middleHand.getCardCount() != 0) throw new IllegalStateException("'successfulBullshitCall': Code to empty middle's hand doesn't work");
+
+
+*/
+        /*Deprecated code for putting all the middle's cards into the hand of the user who was bullshitting
+        for (int j = 0; j <= middleHand.getCardCount(); j++) {
+            badLier.getPlayerHand().addCard(middleHand.getCard(j));
+            middleHand.removeCard(j);
+        }
+        */
+    }
+
+    public void dealAllCards(){
+
+        int numOfPlayers = this.numberOfPlayers;
+
+        //Shuffle the deck 3 times before dealing
+        int shuffle = 0;
+        while(shuffle < 3){
+            deck.shuffle();
+            shuffle++;
+        }
+
+        int tempUser = 0;
+
+        //Deal out all 52 cards, rotating throughout the list of users
+        //AKA Deal 1 card to user 1, deal the next card to user 2, etc.
+        for(int j = 0; j < 52; j++){
+            userList.get(tempUser).getPlayerHand().addCard(deck.dealCard());
+            if ((tempUser + 1) >= numOfPlayers) tempUser = 0;
+            else tempUser++;
+        }
+
+        for(User u : userList) u.printAllCards();
+
+
     }
 
 }

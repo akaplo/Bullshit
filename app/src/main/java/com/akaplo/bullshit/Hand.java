@@ -8,6 +8,7 @@ package com.akaplo.bullshit;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Hand {
 
@@ -169,4 +170,8 @@ public class Hand {
         return sentThisTurn;
     }
 
+
+    public ArrayList<Card> toList(){
+        return this.hand;
+    }
 }

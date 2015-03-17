@@ -68,7 +68,13 @@ public class User {
     public void initHand(Deck deck, int numberOfPlayers) {
         int numberOfCards = DECK_SIZE / numberOfPlayers;
 
+        /* If there are an odd # of users,
+           we need to account for
+           dealing an equal amount of cards to every user BUT
+           not actually dealing out every card.
 
+           This method is now deprecated, and has been replaced
+           by a method of the same name and definition in Game.java.
 
 
 
@@ -97,7 +103,7 @@ public class User {
 
 
 
-    public void showCurrentCard(){
+    public void printAllCards(){
 
         for(int j = 0; j < playerHand.getCardCount(); j++) {
 

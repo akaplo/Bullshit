@@ -17,7 +17,7 @@ import java.util.List;
 
 public class CallBullshit extends ActionBarActivity {
 
-    //TODO:Implement the CallBullshit.xml ability for bullshit to be called by a specific user
+
 
     final String TAG = "CALLBS";
 
@@ -42,7 +42,7 @@ public class CallBullshit extends ActionBarActivity {
 
         makeButtons(game.getNumberOfPlayers());
 
-
+        game.printAllHands();
 
         dontCallBS = (Button) findViewById(R.id.dontCallBS);
 
