@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -31,21 +32,21 @@ public class PlayerHand extends ActionBarActivity {
 
     Game game = NameEntry.game;
 
+    Hand middle;
+
     int[][] cardPictures;
 
     LinearLayout myGallery;
 
     User currentUser;
 
-    User middle;
-
     Hand hand;
-
-    Hand middleHand;
 
     Card[] cardArray;
 
     Button done;
+
+    TextView middleCardCountTV;
 
     Card justRemovedCard;
 
@@ -68,7 +69,7 @@ public class PlayerHand extends ActionBarActivity {
             //Puts the name of the current user at the top of the screen:
             getSupportActionBar().setTitle(currentUser.getName() + "'s Hand");
 
-            middle = game.getMiddleUser();
+            middle = game.getMiddleUser().getPlayerHand();
 
 
             hand = currentUser.getPlayerHand();
@@ -90,6 +91,14 @@ public class PlayerHand extends ActionBarActivity {
 
         protected void initPlayerView(){
             done = (Button) findViewById(R.id.done);
+
+            middleCardCountTV = (TextView) findViewById(R.id.middle_card_count);
+
+            int ct = middle.getCardCount();
+
+            String cardCount = "The Middle Contains " + ct + " cards";
+
+            middleCardCountTV.setText(cardCount);
 
             Log.d(TAG, "Ready to display all cards in this user's hand");
 
@@ -200,7 +209,7 @@ public class PlayerHand extends ActionBarActivity {
     public void onBackPressed(){
 
         if(game.getNumberOfCardsSentThisTurn() == 0)
-            createToast("No more moves to undo!");
+            createToast("No moves to undo!");
         else {
             game.putOneCardBack();
             refresh();

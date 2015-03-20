@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,7 +27,9 @@ public class CallBullshit extends ActionBarActivity {
     Button callBS;
     Button dontCallBS;
 
+    Button playerViewHand;
     Button playerCallBS;
+
 
     Game game = NameEntry.game;
 
@@ -70,14 +73,36 @@ public class CallBullshit extends ActionBarActivity {
         for(int player = 0; player < players; player++) {
             if (player != game.getUserBeforeBullshit()) {
                 final int userNum = player;
-                String buttonText = userList.get(player).getName() + ": Call bullshit";
+                String handButtonText = userList.get(player).getName() + ": View Hand";
+                String callButtonText = userList.get(player).getName() + ": Call bullshit";
+
+
+                playerViewHand = new Button(this);
+                playerViewHand.setText(handButtonText);
 
                 playerCallBS = new Button(this);
-                playerCallBS.setText(buttonText);
+                playerCallBS.setText(callButtonText);
 
+                linLayout.addView(playerViewHand);
                 linLayout.addView(playerCallBS);
 
+
                 //row.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
+
+
+                playerViewHand.setOnClickListener(new View.OnClickListener(){
+                    @Override
+                    public void onClick(View v){
+                        Log.d(TAG, "About to view " + userList.get(userNum).getName() + "'s hand:");
+
+                        game.setViewOnlyPlayer(userNum);
+
+                        Intent toViewOnly = new Intent(CallBullshit.this, ViewOnlyPlayerHand.class);
+                        startActivity(toViewOnly);
+
+                    }
+                });
+
 
                 playerCallBS.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -95,6 +120,19 @@ public class CallBullshit extends ActionBarActivity {
         } //end for
 
     } //end method
+
+    @Override
+    public void onBackPressed(){
+        createToast("Can't go back, nuh uh!");
+
+    }
+
+    public void createToast(String msg){
+        Toast.makeText(getApplicationContext(), msg,
+                Toast.LENGTH_LONG).show();
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

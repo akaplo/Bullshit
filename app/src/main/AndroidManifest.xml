@@ -40,6 +40,10 @@
             android:name=".MiddleHand"
             android:label="@string/title_activity_middle_hand" >
         </activity>
+        <activity
+            android:name=".ViewOnlyPlayerHand"
+            android:label="@string/title_activity_view_only_player_hand" >
+        </activity>
     </application>
 
 </manifest>

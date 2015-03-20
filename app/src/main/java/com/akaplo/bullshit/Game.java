@@ -111,17 +111,24 @@ public class Game {
     }
 
     public void putOneCardBack() {
-            if(numOfCards > 0) {
+
+        if(cardsSentList.size() > 0){
+            getCurrentUser().getPlayerHand().addCard(cardsSentList.get(cardsSentList.size()-1));
+            middleHand.removeCard(cardsSentList.get(cardsSentList.size()-1));
+            cardsSentList.remove(cardsSentList.size()-1);
+
+            numOfCards--;
+        }
+
+    /*    if(numOfCards > 0) {
 
                 userList.get(currentUser).getPlayerHand().addCard(cardJustRemoved);
                 middleHand.removeCard(cardJustRemoved);
-
+    */
             //Previous logic for removing the last card sent to the middle during a turn
                 //getUserHand(currentUser).addCard(cardsSent[numOfCards - 1]);
                 //middleHand.removeCard(cardsSent[numOfCards - 1]);
 
-                numOfCards--;
-            }
         else throw new IllegalStateException("Attempted to put a card back, but there's none to put back");
         }
 
@@ -347,5 +354,14 @@ public class Game {
 
     }
 
-}
+    int viewOnlyPlayer;
 
+    public void setViewOnlyPlayer(int userNum){
+        viewOnlyPlayer = userNum;
+    }
+
+    public int getViewOnlyPlayer(){
+        return viewOnlyPlayer;
+    }
+
+}
